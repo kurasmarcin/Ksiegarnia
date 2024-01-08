@@ -1,0 +1,29 @@
+﻿@model Cart
+
+<h2>Koszyk</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Ilość</th>
+            <th>Cena jednostkowa</th>
+            <th>Łączna cena</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Quantity</td>
+                <td>@item.Price</td>
+                <td>@(item.Quantity * item.Price)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-action="Index">Powrót do koszyka</a>
+</p>
