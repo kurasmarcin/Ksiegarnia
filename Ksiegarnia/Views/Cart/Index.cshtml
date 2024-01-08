@@ -1,14 +1,15 @@
 ﻿@model Cart
 
-<h2>Koszyk</h2>
+<h2>Twój Koszyk</h2>
 
 <table class="table">
     <thead>
         <tr>
             <th>Tytuł</th>
             <th>Ilość</th>
-            <th>Cena jednostkowa</th>
-            <th>Łączna cena</th>
+            <th>Cena</th>
+            <th>Łączna Cena</th>
+            <th>Operacje</th>
         </tr>
     </thead>
     <tbody>
@@ -16,14 +17,27 @@
         {
             <tr>
                 <td>@item.Title</td>
-                <td>@item.Quantity</td>
+                <td>
+                    <form asp-controller="Cart" asp-action="UpdateQuantity" method="post">
+                        <input type="hidden" name="bookId" value="@item.BookId" />
+                        <input type="number" name="quantity" value="@item.Quantity" />
+                        <button type="submit">Zaktualizuj</button>
+                    </form>
+                </td>
                 <td>@item.Price</td>
                 <td>@(item.Quantity * item.Price)</td>
+                <td>
+                    <a asp-action="RemoveFromCart" asp-controller="Cart" asp-route-bookId="@item.BookId">Usuń</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
+<div>
+    <strong>Łączna suma: @Model.GetTotal()</strong>
+</div>
+
 <p>
-    <a asp-action="Index">Powrót do koszyka</a>
+    <a asp-action="Index">Kontynuuj zakupy</a>
 </p>

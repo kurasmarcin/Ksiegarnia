@@ -1,5 +1,6 @@
 ﻿using Ksiegarnia.Data;
 using Ksiegarnia.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ksiegarnia.Controllers
@@ -12,13 +13,13 @@ namespace Ksiegarnia.Controllers
         {
             _bookRepository = bookRepository;
         }
-
+        
         public IActionResult Index()
         {
             var books = _bookRepository.GetAllBooks();
             return View(books);
         }
-
+        [Authorize]
         public IActionResult Details(int id)
         {
             var book = _bookRepository.GetBookById(id);

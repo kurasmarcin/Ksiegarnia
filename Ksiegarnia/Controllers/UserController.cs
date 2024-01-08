@@ -24,15 +24,15 @@ namespace Ksiegarnia.Controllers
             return View(users);
         }
 
-        public IActionResult Details(string userId)
+        public IActionResult Details(int userId)
         {
-            var user = _userManager.FindByIdAsync(userId).Result;
+            var user = _userManager.FindByIdAsync(userId.ToString()).Result;
             return View(user);
         }
 
-        public IActionResult Edit(string userId)
+        public IActionResult Edit(int userId)
         {
-            var user = _userManager.FindByIdAsync(userId).Result;
+            var user = _userManager.FindByIdAsync(userId.ToString()).Result;
             return View(user);
         }
 
