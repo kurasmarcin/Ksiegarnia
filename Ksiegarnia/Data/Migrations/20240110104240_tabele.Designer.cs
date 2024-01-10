@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ksiegarnia.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240106101720_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240110104240_tabele")]
+    partial class tabele
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,6 +38,10 @@ namespace Ksiegarnia.Data.Migrations
 
                     b.Property<int?>("CartId")
                         .HasColumnType("int");
+
+                    b.Property<string>("CoverImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -78,6 +82,37 @@ namespace Ksiegarnia.Data.Migrations
                     b.ToTable("Carts");
                 });
 
+            modelBuilder.Entity("Ksiegarnia.Models.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.ToTable("CartItem");
+                });
+
             modelBuilder.Entity("Ksiegarnia.Models.Category", b =>
                 {
                     b.Property<int>("CategoryId")
@@ -103,10 +138,17 @@ namespace Ksiegarnia.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FavoriteId"), 1L, 1);
 
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("FavoriteId");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Favorites");
                 });
@@ -146,7 +188,7 @@ namespace Ksiegarnia.Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -362,6 +404,32 @@ namespace Ksiegarnia.Data.Migrations
                         .HasForeignKey("FavoriteId");
                 });
 
+            modelBuilder.Entity("Ksiegarnia.Models.CartItem", b =>
+                {
+                    b.HasOne("Ksiegarnia.Models.Cart", null)
+                        .WithMany("Items")
+                        .HasForeignKey("CartId");
+                });
+
+            modelBuilder.Entity("Ksiegarnia.Models.Favorite", b =>
+                {
+                    b.HasOne("Ksiegarnia.Models.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ksiegarnia.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -416,6 +484,8 @@ namespace Ksiegarnia.Data.Migrations
             modelBuilder.Entity("Ksiegarnia.Models.Cart", b =>
                 {
                     b.Navigation("Books");
+
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("Ksiegarnia.Models.Favorite", b =>

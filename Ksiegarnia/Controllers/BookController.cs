@@ -19,7 +19,6 @@ namespace Ksiegarnia.Controllers
             var books = _bookRepository.GetAllBooks();
             return View(books);
         }
-        [Authorize]
         public IActionResult Details(int id)
         {
             var book = _bookRepository.GetBookById(id);

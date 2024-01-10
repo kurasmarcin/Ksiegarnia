@@ -2,6 +2,13 @@
 
 <h2>Twój Koszyk</h2>
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -39,5 +46,5 @@
 </div>
 
 <p>
-    <a asp-action="Index">Kontynuuj zakupy</a>
+    <a asp-controller="Book" asp-action="Index">Kontynuuj zakupy</a>
 </p>

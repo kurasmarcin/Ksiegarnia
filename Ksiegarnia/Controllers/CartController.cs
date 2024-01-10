@@ -3,18 +3,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Ksiegarnia.Data;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Ksiegarnia.Controllers
 {
     public class CartController : Controller
     {
         private readonly IBookRepository _bookRepository;
-
+        
         public CartController(IBookRepository bookRepository)
         {
             _bookRepository = bookRepository;
         }
-
+        [Authorize]
         public IActionResult Index()
         {
             var cart = HttpContext.Session.GetString("Cart");
@@ -22,7 +23,7 @@ namespace Ksiegarnia.Controllers
             return View(cartModel);
         }
 
-
+        
         public IActionResult AddToCart(int bookId, int quantity)
         {
            
@@ -57,6 +58,12 @@ namespace Ksiegarnia.Controllers
         [HttpPost]
         public IActionResult UpdateQuantity(int bookId, int quantity)
         {
+            if (quantity < 1)
+            {
+                // Wprowadzono nieprawidłową ilość, możesz obsłużyć to odpowiednio, na przykład przekierowując z komunikatem błędu
+                TempData["ErrorMessage"] = "Ilość książek musi być większa niż 0.";
+                return RedirectToAction("Index");
+            }
             var cart = HttpContext.Session.GetString("Cart");
             var cartModel = string.IsNullOrEmpty(cart) ? new Cart() : JsonConvert.DeserializeObject<Cart>(cart);
 

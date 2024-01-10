@@ -4,7 +4,7 @@
 
 namespace Ksiegarnia.Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class tabele : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -35,19 +35,6 @@ namespace Ksiegarnia.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Favorites",
-                columns: table => new
-                {
-                    FavoriteId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Favorites", x => x.FavoriteId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -61,7 +48,7 @@ namespace Ksiegarnia.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "User",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
@@ -71,7 +58,29 @@ namespace Ksiegarnia.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.PrimaryKey("PK_User", x => x.UserId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CartItem",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CartId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CartItem_Carts_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Carts",
+                        principalColumn: "CartId");
                 });
 
             migrationBuilder.CreateTable(
@@ -84,6 +93,7 @@ namespace Ksiegarnia.Data.Migrations
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CoverImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CartId = table.Column<int>(type: "int", nullable: true),
                     FavoriteId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -95,11 +105,32 @@ namespace Ksiegarnia.Data.Migrations
                         column: x => x.CartId,
                         principalTable: "Carts",
                         principalColumn: "CartId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Favorites",
+                columns: table => new
+                {
+                    FavoriteId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Favorites", x => x.FavoriteId);
                     table.ForeignKey(
-                        name: "FK_Books_Favorites_FavoriteId",
-                        column: x => x.FavoriteId,
-                        principalTable: "Favorites",
-                        principalColumn: "FavoriteId");
+                        name: "FK_Favorites_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "BookId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Favorites_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -111,12 +142,42 @@ namespace Ksiegarnia.Data.Migrations
                 name: "IX_Books_FavoriteId",
                 table: "Books",
                 column: "FavoriteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CartItem_CartId",
+                table: "CartItem",
+                column: "CartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Favorites_BookId",
+                table: "Favorites",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Favorites_UserId",
+                table: "Favorites",
+                column: "UserId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Books_Favorites_FavoriteId",
+                table: "Books",
+                column: "FavoriteId",
+                principalTable: "Favorites",
+                principalColumn: "FavoriteId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Books_Carts_CartId",
+                table: "Books");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Books_Favorites_FavoriteId",
+                table: "Books");
+
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "CartItem");
 
             migrationBuilder.DropTable(
                 name: "Categories");
@@ -125,13 +186,16 @@ namespace Ksiegarnia.Data.Migrations
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
                 name: "Carts");
 
             migrationBuilder.DropTable(
                 name: "Favorites");
+
+            migrationBuilder.DropTable(
+                name: "Books");
+
+            migrationBuilder.DropTable(
+                name: "User");
         }
     }
 }

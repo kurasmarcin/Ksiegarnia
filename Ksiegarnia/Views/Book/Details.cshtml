@@ -1,4 +1,5 @@
 ﻿@model Book
+@using Ksiegarnia.Models
 
 <h2>Szczegóły Książki</h2>
 
@@ -6,8 +7,6 @@
 {
     <div>
         <dl class="dl-horizontal">
-            <dt>ID</dt>
-            <dd>@Model.BookId</dd>
             <dt>Tytuł</dt>
             <dd>@Model.Title</dd>
             <dt>Autor</dt>
@@ -16,12 +15,21 @@
             <dd>@Model.Price</dd>
         </dl>
     </div>
+
     <form asp-controller="Cart" asp-action="AddToCart" method="post">
         <input type="hidden" name="bookId" value="@Model.BookId" />
         <label for="quantity">Ilość:</label>
         <input type="number" name="quantity" value="1" min="1" />
         <button type="submit">Dodaj do koszyka</button>
     </form>
+
+    <div>
+        <dl class="dl-horizontal">
+            <dt>Opis książki</dt>
+            <dd>@Model.Description</dd>
+        </dl>
+    </div>
+
 }
 else
 {
@@ -29,5 +37,6 @@ else
 }
 
 <p>
-    <a asp-action="Index">Powrót do listy książek</a>
+    <a asp-controller="Book" asp-action="Index" >Powrót do listy książek</a>
 </p>
+
