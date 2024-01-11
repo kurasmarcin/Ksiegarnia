@@ -1,4 +1,6 @@
-﻿namespace Ksiegarnia.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Ksiegarnia.Models
 {
     public class Cart
     {
@@ -10,5 +12,6 @@
         {
             return Items.Sum(item => item.Quantity * item.Price);
         }
+        public virtual IdentityUser? User { get; set; }
     }
 }
