@@ -166,6 +166,7 @@ namespace Ksiegarnia.Data
         IEnumerable<Book> GetFavoriteBooks(int userId);
         void AddToFavorite(int userId, int bookId);
         void RemoveFromFavorite(int userId, int bookId);
+       
     }
     public class BookRepository : IBookRepository
     {

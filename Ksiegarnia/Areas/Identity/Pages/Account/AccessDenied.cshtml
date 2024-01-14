@@ -1,7 +1,7 @@
 ﻿@page
 @model AccessDeniedModel
 @{
-    ViewData["Title"] = "Access Denied";
+    ViewData["Title"] = "Odmowa Dostępu";
     Layout = "/Areas/Identity/Pages/_Layout.cshtml";
 }
 
@@ -38,15 +38,15 @@
             cursor: pointer;
         }
 
-        .btn-primary:hover {
-            background-color: #48a0c0;
-        }
+            .btn-primary:hover {
+                background-color: #48a0c0;
+            }
     </style>
 </head>
 <body>
     <header>
         <h1>@ViewData["Title"]</h1>
-        <p class="text-danger">You do not have access to this resource.</p>
+        <p class="text-danger">Przykro Nam! Nie masz dostępu do tej aktywności.</p>
     </header>
 
     <script>
