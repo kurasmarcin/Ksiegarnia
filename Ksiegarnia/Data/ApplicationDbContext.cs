@@ -188,14 +188,41 @@ namespace Ksiegarnia.Data
 
         public void AddBook(Book book)
         {
-            _context.Books.Add(book);
-            _context.SaveChanges();
+            try
+            {
+                _context.Books.Add(book);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                // Tutaj dodaj logowanie błędu, na przykład do konsoli
+                Console.WriteLine($"Error adding book to the database: {ex.Message}");
+                throw; // Rzuć błąd ponownie, aby informować o błędzie
+            }
         }
 
         public void UpdateBook(Book book)
         {
-            // Implementacja aktualizacji
-            _context.SaveChanges();
+            var existingBook = _context.Books.FirstOrDefault(b => b.BookId == book.BookId);
+
+            if (existingBook != null)
+            {
+                // Aktualizuj tylko te właściwości, które powinny być aktualizowane
+                existingBook.Title = book.Title;
+                existingBook.Author = book.Author;
+                existingBook.Description = book.Description;
+                existingBook.Price = book.Price;
+
+                // Jeśli zmienia się obraz okładki, zaktualizuj również tę informację
+                if (!string.IsNullOrEmpty(book.CoverImage))
+                {
+                    existingBook.CoverImage = book.CoverImage;
+
+                }
+
+                _context.SaveChanges();
+            }
+
         }
 
         public void DeleteBook(int bookId)

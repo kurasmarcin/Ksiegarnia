@@ -44,6 +44,7 @@ namespace Ksiegarnia
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseStaticFiles();
 
             // Uzyskaj dostęp do dostawcy usług (IServiceProvider) poprzez zbudowanie zakresu z serwisów.
             using (var scope = app.ApplicationServices.CreateScope())

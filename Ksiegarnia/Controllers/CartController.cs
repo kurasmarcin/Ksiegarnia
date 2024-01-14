@@ -54,29 +54,39 @@ namespace Ksiegarnia.Controllers
             {
                 var book = _bookRepository.GetBookById(bookId);
 
-                var cart = HttpContext.Session.GetString($"Cart_{user.Id}");
-                var cartModel = string.IsNullOrEmpty(cart) ? new Cart() : JsonConvert.DeserializeObject<Cart>(cart);
-
-                var cartItem = cartModel.Items.FirstOrDefault(item => item.BookId == bookId);
-
-                if (cartItem == null)
+                // Check if the book exists
+                if (book != null)
                 {
-                    cartModel.Items.Add(new CartItem
+                    var cart = HttpContext.Session.GetString($"Cart_{user.Id}");
+                    var cartModel = string.IsNullOrEmpty(cart) ? new Cart() : JsonConvert.DeserializeObject<Cart>(cart);
+
+                    var cartItem = cartModel.Items.FirstOrDefault(item => item.BookId == bookId);
+
+                    if (cartItem == null)
                     {
-                        BookId = book.BookId,
-                        Title = book.Title,
-                        Quantity = quantity,
-                        Price = book.Price
-                    });
+                        cartModel.Items.Add(new CartItem
+                        {
+                            BookId = book.BookId,
+                            Title = book.Title,
+                            Quantity = quantity,
+                            Price = book.Price
+                        });
+                    }
+                    else
+                    {
+                        cartItem.Quantity += quantity;
+                    }
+
+                    HttpContext.Session.SetString($"Cart_{user.Id}", JsonConvert.SerializeObject(cartModel));
+
+                    return RedirectToAction("Index");
                 }
                 else
                 {
-                    cartItem.Quantity += quantity;
+                    // Handle the case where the book is not found
+                    // You can redirect to an error page or display an appropriate message
+                    return RedirectToAction("Index", "Book");
                 }
-
-                HttpContext.Session.SetString($"Cart_{user.Id}", JsonConvert.SerializeObject(cartModel));
-
-                return RedirectToAction("Index");
             }
             else
             {
@@ -85,6 +95,7 @@ namespace Ksiegarnia.Controllers
                 return RedirectToAction("Error");
             }
         }
+
         [HttpPost]
         public IActionResult UpdateQuantity(int bookId, int quantity)
         {

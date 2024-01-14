@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Book>
+﻿@model IEnumerable<Ksiegarnia.Models.Book>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista Książek</title>
+    <title>Book Management</title>
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
@@ -17,6 +17,21 @@
             text-align: center;
             color: #333;
         }
+
+        .add-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #1e3799;
+            color: #fff;
+            padding: 15px 30px; /* Zwiększenie rozmiaru przycisku */
+            border-radius: 4px;
+        }
+
+            .add-link:hover {
+                background-color: #3c5aa6;
+            }
 
         table {
             width: 100%;
@@ -34,14 +49,6 @@
             color: white;
         }
 
-        img {
-            max-width: 120px; /* Zwiększenie rozmiaru zdjęcia */
-            max-height: 160px;
-            display: block;
-            margin: 0 auto; /* Wyśrodkowanie zdjęcia */
-            border-radius: 8px; /* Zaokrąglenie rogów */
-        }
-
         a {
             display: inline-block;
             padding: 8px 16px;
@@ -50,42 +57,47 @@
             border-radius: 4px;
         }
 
-        .details-link{
+            a:hover {
+                background-color: #ddd;
+            }
+
+        .edit-link,
+        .delete-link {
             background-color: #3498db;
             border: 1px solid #3498db;
             color: white;
         }
-            
+
+            .edit-link:hover,
+            .delete-link:hover {
+                background-color: #2184b7;
+            }
     </style>
 </head>
 <body>
-    <h1>LISTA KSIĄŻEK</h1>
+    <h1>Book Management</h1>
+
+    <a asp-action="Add" class="add-link">Add New Book</a>
 
     <table>
         <thead>
             <tr>
-                <th>   </th>
-                <th>Tytuł</th>
-                <th>Autor</th>
-                <th>Cena</th>
-                <th>   </th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var book in Model)
             {
                 <tr>
-                    <td>
-                        @if (!string.IsNullOrEmpty(book.CoverImage))
-                        {
-                            <img src="~/images/@book.CoverImage" alt="Cover Image" />
-                        }
-                    </td>
                     <td>@book.Title</td>
                     <td>@book.Author</td>
                     <td>@book.Price</td>
                     <td>
-                        <a href="@Url.Action("Details", new { id = book.BookId })" class="details-link">Szczegóły</a>
+                        <a href="@Url.Action("Edit", new { id = book.BookId })" class="edit-link">Edit</a> |
+                        <a href="@Url.Action("Delete", new { id = book.BookId })" class="delete-link">Delete</a>
                     </td>
                 </tr>
             }
