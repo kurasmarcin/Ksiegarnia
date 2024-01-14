@@ -1,0 +1,20 @@
+Instrukcja uruchomienia projektu:
+
+﻿Strona Księgarnia, wersja Visual Studio Community 2022 .NET SDK 6.0
+
+Przed uruchomieniem projektu prosimy wykonać w konsoli menedżera pakietów poniższe polecenia:
+Add-Migration 
+Update-database
+
+Zakładki dostępne dla użytkowników niezalogowanych obejmują:
+Strona Główna 
+Lista Książek - dostępne pozycje 
+Szczegóły - szczegółowe informacje o książkach
+Kontakt - informację do kontaktu, formularz kontaktowy 
+
+Zakładki dostępne dla użytkowników niezalogowanych obejmują:
+Koszyk - podgląd dodanych produktów, ich tytuł, autorów, ilość, cenę oraz łączną kwotę
+
+Po utworzeniu konta i potwierdzeniu e-maila, użytkownik zyskuje dostęp do pełnych funkcji programu. Może zarządzać koszykiem-dodawać,usuwać książki w trakcie trwającej sesji. 
+
+Tworząc konto z wykorzystaniem maila admin@wp.pl użytkownik zyskuje funkcję administratora. Administrator za pomocą zakładki “Zarządzanie” może dodawać, edytować i usuwać książki, wprowadzając m.in tytuł, autora, cenę, opis. Istnieje możliwość dodania zdjęcia lub edycji-załączenie pliku jpg.
